@@ -6,20 +6,21 @@ import plotly.express as px
 file_path = "backtest.xlsx"
 df = pd.read_excel(file_path)
 
-# Certificar-se de que a coluna 'Data de abertura' está no formato datetime
+# Certificar-se de que as colunas 'Data de abertura' e 'Data da solução' estão no formato datetime
 df['Data de abertura'] = pd.to_datetime(df['Data de abertura'], errors='coerce')
+df['Data da solução'] = pd.to_datetime(df['Data da solução'], errors='coerce')
 
-# Adicionar a coluna 'Mês/Ano' apenas com mês e ano
-df['Mês/Ano'] = df['Data de abertura'].dt.to_period('M').astype(str)
+# Adicionar a coluna 'Mês/Ano' com base na 'Data da solução' para agrupamento
+df['Mês/Ano'] = df['Data da solução'].dt.to_period('M').astype(str)
 
-# Determinar a data inicial padrão com base na base de dados
-min_date = df['Data de abertura'].min()
+# Determinar a data inicial e final para o filtro com base na 'Data da solução'
+min_date = df['Data da solução'].min()
 if pd.notnull(min_date):
     default_start_date = min_date.replace(day=1)
 else:
     default_start_date = None
 
-max_date = df['Data de abertura'].max()
+max_date = df['Data da solução'].max()
 
 # Converter a coluna 'Tempo em atendimento' para horas decimais
 def time_to_hours(time_str):
@@ -95,53 +96,6 @@ end_date = st.date_input(
     help="Escolha a data final para filtrar os dados",
 )
 
-# Estilo para garantir que o texto fique visível no modo escuro
-st.markdown("""
-    <style>
-    .streamlit-expanderHeader {
-        color: white !important;
-    }
-    .stTextInput, .stDateInput, .stSelectbox, .stRadio {
-        color: white !important;
-        background-color: #333333 !important;  /* Fundo escuro */
-        border: 1px solid #5e5e5e !important;  /* Cor de borda clara */
-    }
-    .stTextInput input, .stDateInput input, .stSelectbox select {
-        color: white !important;
-        background-color: #333333 !important;  /* Fundo escuro no campo */
-    }
-    .stTextInput input::placeholder {
-        color: #aaaaaa !important;  /* Cor do texto do placeholder */
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# Estilo para garantir visibilidade no modo claro e escuro
-st.markdown("""
-    <style>
-    /* Ajuste do texto e fundo dos componentes para modo claro e escuro */
-    .stSelectbox, .stDateInput, .stTextInput {
-        color: var(--secondary-text-color) !important;  /* Cor do texto ajustada automaticamente */
-        background-color: var(--background-color) !important;  /* Fundo adaptável ao tema */
-        border: 1px solid var(--border-color) !important;  /* Cor da borda ajustada */
-    }
-    .stSelectbox select, .stDateInput input, .stTextInput input {
-        color: var(--text-color) !important;
-        background-color: var(--background-color) !important;  /* Fundo adaptável */
-    }
-
-    /* Ajuste do placeholder */
-    .stTextInput input::placeholder, .stDateInput input::placeholder {
-        color: var(--secondary-text-color) !important;  /* Ajuste automático no placeholder */
-    }
-
-    /* Melhorando a visibilidade de seleções */
-    .stSelectbox select:focus, .stDateInput input:focus {
-        border-color: var(--primary-color) !important;  /* Cor da borda ao focar */
-    }
-    </style>
-""", unsafe_allow_html=True)
-
 # Validar se as datas foram preenchidas corretamente
 if start_date and end_date and start_date > end_date:
     st.error("A data de início não pode ser maior que a data de fim.")
@@ -149,9 +103,9 @@ elif tecnico:  # Só filtrar se o técnico foi selecionado
     # Filtragem de dados
     filtered_df = df[df['Atribuído - Técnico'] == tecnico]
     if start_date:
-        filtered_df = filtered_df[filtered_df['Data de abertura'] >= pd.to_datetime(start_date)]
+        filtered_df = filtered_df[filtered_df['Data da solução'] >= pd.to_datetime(start_date)]
     if end_date:
-        filtered_df = filtered_df[filtered_df['Data de abertura'] <= pd.to_datetime(end_date)]
+        filtered_df = filtered_df[filtered_df['Data da solução'] <= pd.to_datetime(end_date)]
 
     # Calcular o total de horas por tipo
     incidentes_df = filtered_df[filtered_df['Tipo'] == 'Incidente']
@@ -301,3 +255,4 @@ elif tecnico:  # Só filtrar se o técnico foi selecionado
             color_discrete_map=prioridade_cores
         )
         st.plotly_chart(fig_requisicoes_pizza)
+
