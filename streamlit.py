@@ -7,10 +7,10 @@ file_path = "backtest.xlsx"
 df = pd.read_excel(file_path)
 
 # Certificar-se de que a coluna 'Data de abertura' está no formato datetime
-df['Data da Solução'] = pd.to_datetime(df['Data da Solução'], errors='coerce')
+df['Data de Abertura'] = pd.to_datetime(df['Data da Solução'], errors='coerce')
 
 # Adicionar a coluna 'Mês/Ano' apenas com mês e ano
-df['Mês/Ano'] = df['Data da Solução'].dt.to_period('M').astype(str)
+df['Mês/Ano'] = df['Data de Abertura'].dt.to_period('M').astype(str)
 
 # Determinar a data inicial padrão com base na base de dados
 min_date = df['Data da Solução'].min()
