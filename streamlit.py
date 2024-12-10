@@ -81,7 +81,7 @@ start_date = st.date_input(
     min_value=min_date, 
     max_value=max_date, 
     format="DD/MM/YYYY",
-    key="end_date_input",  # Chave única
+    key="star_date_input",  # Chave única
     help="Escolha a data inicial para o filtrar os dados",
 )
 
