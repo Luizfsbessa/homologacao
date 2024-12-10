@@ -81,7 +81,7 @@ start_date = st.date_input(
     min_value=min_date, 
     max_value=max_date, 
     format="DD/MM/YYYY",
-    key="start_date_input",  # Chave única
+    key="end_date_input",  # Chave única
     help="Escolha a data inicial para o filtrar os dados",
 )
 
@@ -152,9 +152,9 @@ elif tecnico:  # Só filtrar se o técnico foi selecionado
     # Filtragem de dados
     filtered_df = df[df['Atribuído - Técnico'] == tecnico]
     if start_date:
-        filtered_df = filtered_df[filtered_df['Data de abertura'] >= pd.to_datetime(start_date)]
+        filtered_df = filtered_df[filtered_df['Data da Solução'] >= pd.to_datetime(start_date)]
     if end_date:
-        filtered_df = filtered_df[filtered_df['Data de abertura'] <= pd.to_datetime(end_date)]
+        filtered_df = filtered_df[filtered_df['Data da Solução'] <= pd.to_datetime(end_date)]
 
     # Calcular o total de horas por tipo
     incidentes_df = filtered_df[filtered_df['Tipo'] == 'Incidente']
