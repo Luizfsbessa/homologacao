@@ -7,19 +7,19 @@ file_path = "backtest.xlsx"
 df = pd.read_excel(file_path)
 
 # Certificar-se de que a coluna 'Data de abertura' está no formato datetime
-df['Data de Solução'] = pd.to_datetime(df['Data de Solução'], errors='coerce')
+df['Data da Solução'] = pd.to_datetime(df['Data da Solução'], errors='coerce')
 
 # Adicionar a coluna 'Mês/Ano' apenas com mês e ano
-df['Mês/Ano'] = df['Data de Solução'].dt.to_period('M').astype(str)
+df['Mês/Ano'] = df['Data da Solução'].dt.to_period('M').astype(str)
 
 # Determinar a data inicial padrão com base na base de dados
-min_date = df['Data de Solução'].min()
+min_date = df['Data da Solução'].min()
 if pd.notnull(min_date):
     default_start_date = min_date.replace(day=1)
 else:
     default_start_date = None
 
-max_date = df['Data de Solução'].max()
+max_date = df['Data da Solução'].max()
 
 # Converter a coluna 'Tempo em atendimento' para horas decimais
 def time_to_hours(time_str):
@@ -149,9 +149,9 @@ elif tecnico:  # Só filtrar se o técnico foi selecionado
     # Filtragem de dados
     filtered_df = df[df['Atribuído - Técnico'] == tecnico]
     if start_date:
-        filtered_df = filtered_df[filtered_df['Data de Solução'] >= pd.to_datetime(start_date)]
+        filtered_df = filtered_df[filtered_df['Data da Solução'] >= pd.to_datetime(start_date)]
     if end_date:
-        filtered_df = filtered_df[filtered_df['Data de Solução'] <= pd.to_datetime(end_date)]
+        filtered_df = filtered_df[filtered_df['Data da Solução'] <= pd.to_datetime(end_date)]
 
     # Calcular o total de horas por tipo
     incidentes_df = filtered_df[filtered_df['Tipo'] == 'Incidente']
