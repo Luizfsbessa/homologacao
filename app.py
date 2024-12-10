@@ -7,7 +7,7 @@ import plotly.express as px
 file_path = "backtest.xlsx"
 df = pd.read_excel(file_path)
 
-df['Data de abertura'] = pd.to_datetime(df['Data de abertura'], errors='coerce')
+df['Data da solução'] = pd.to_datetime(df['Data da solução'], errors='coerce')
 
 def time_to_hours(time_str):
     try:
@@ -43,8 +43,8 @@ app.layout = html.Div([
         html.Label("Selecionar Intervalo de Data:"),
         dcc.DatePickerRange(
             id='date-picker-range',
-            start_date=df['Data de abertura'].min().date(),
-            end_date=df['Data de abertura'].max().date(),
+            start_date=df['Data da solução'].min().date(),
+            end_date=df['Data da solução'].max().date(),
             display_format='DD/MM/YYYY',
             style={'marginTop': '20px'}
         )
@@ -66,7 +66,7 @@ def update_dashboard(selected_tecnico, selected_tipo, start_date, end_date):
     if selected_tipo:
         filtered_df = filtered_df[filtered_df['Tipo'].isin(selected_tipo)]
     filtered_df = filtered_df[
-        (filtered_df['Data de abertura'] >= start_date) & (filtered_df['Data de abertura'] <= end_date)
+        (filtered_df['Data da solução'] >= start_date) & (filtered_df['Data da solução'] <= end_date)
     ]
     total_time = filtered_df['Horas Decimais'].sum()
     total_time_str = f"Total de Tempo em Atendimento: {total_time:.2f} horas"
