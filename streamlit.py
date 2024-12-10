@@ -7,19 +7,19 @@ file_path = "backtest.xlsx"
 df = pd.read_excel(file_path)
 
 # Certificar-se de que a coluna 'Data de abertura' está no formato datetime
-df['Data de abertura'] = pd.to_datetime(df['Data de abertura'], errors='coerce')
+df['Data da Solução'] = pd.to_datetime(df['Data da Solução'], errors='coerce')
 
 # Adicionar a coluna 'Mês/Ano' apenas com mês e ano
-df['Mês/Ano'] = df['Data de abertura'].dt.to_period('M').astype(str)
+df['Mês/Ano'] = df['Data da Solução'].dt.to_period('M').astype(str)
 
 # Determinar a data inicial padrão com base na base de dados
-min_date = df['Data de abertura'].min()
+min_date = df['Data da Solução'].min()
 if pd.notnull(min_date):
     default_start_date = min_date.replace(day=1)
 else:
     default_start_date = None
 
-max_date = df['Data de abertura'].max()
+max_date = df['Data da Solução'].max()
 
 # Converter a coluna 'Tempo em atendimento' para horas decimais
 def time_to_hours(time_str):
@@ -141,9 +141,6 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
-
-
-
 
 # Validar se as datas foram preenchidas corretamente
 if start_date and end_date and start_date > end_date:
